@@ -1,0 +1,62 @@
+generator db {
+  provider = "go run github.com/steebchen/prisma-client-go"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model pet {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(120)
+  breed       String?       @db.VarChar(45)
+  age         Int?
+  owner       Int?
+  treatment   treatment[]
+  vaccination vaccination[]
+}
+
+model petowner {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(120)
+  birth_date DateTime? @db.Date
+  email      String    @db.VarChar(80)
+  phone      String?   @db.VarChar(45)
+  address    String    @db.VarChar(120)
+}
+
+model treatment {
+  id                                   Int          @id @default(autoincrement())
+  description                          String       @db.VarChar(120)
+  pet                                  Int
+  veterinarian                         Int
+  veterinarian_treatmentToveterinarian veterinarian @relation(fields: [veterinarian], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_treatement_veterinarian")
+  pet_petTotreatment                   pet          @relation(fields: [pet], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_treatment_pet")
+
+  @@index([veterinarian], map: "fk_treatement_veterinarian_idx")
+  @@index([pet], map: "fk_treatment_pet_idx")
+}
+
+model vaccination {
+  id                   Int    @id @default(autoincrement())
+  description          String @db.VarChar(120)
+  pet                  Int
+  pet_petTovaccination pet    @relation(fields: [pet], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_vaccination_pet")
+
+  @@index([pet], map: "fk_vaccination_pet_idx")
+}
+
+model veterinarian {
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(120)
+  inscricaoCRMV String      @db.VarChar(75)
+  treatment     treatment[]
+}
+
+model appointment {
+  id           Int       @id @unique(map: "idAppointment_UNIQUE")
+  date         DateTime? @db.Date
+  veterinarian Int
+  petowner     Int
+}

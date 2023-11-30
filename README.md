@@ -16,7 +16,7 @@ Pet Clinic API written in GOLANG
 
 ## Steps to run the project
 - Set DATABASE_URL in the .env file
-- Crie as tabelas no banco com o comando:
+- Run the script to generate prisma client and create the database:
     > go run github.com/steebchen/prisma-client-go db push
-- go run main.go   (alternativamente:  docker compose up)
-- follow the link http://localhost:3000/api/pets
+- docker compose up
+- Follow the link http://localhost:3000/api/pets

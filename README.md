@@ -15,6 +15,7 @@ Pet Clinic API written in GOLANG
 - Pesquisa de satisfação e contatos através de SMS e Whatsapp
 
 ## Steps to run the project
+- Set DATABASE_URL in the .env file
 - Crie as tabelas no banco com o comando:
     > go run github.com/steebchen/prisma-client-go db push
 - go run main.go   (alternativamente:  docker compose up)

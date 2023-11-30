@@ -8,13 +8,14 @@ datasource db {
 }
 
 model pet {
-  id          Int           @id @default(autoincrement())
-  name        String        @db.VarChar(120)
-  breed       String?       @db.VarChar(45)
-  age         Int?
-  owner       Int?
-  treatment   treatment[]
-  vaccination vaccination[]
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(120)
+  breed        String        @db.VarChar(45)
+  age          Int?
+  owner        Int?
+  flag_removed Boolean
+  treatment    treatment[]
+  vaccination  vaccination[]
 }
 
 model petowner {
@@ -55,8 +56,8 @@ model veterinarian {
 }
 
 model appointment {
-  id           Int       @id @unique(map: "idAppointment_UNIQUE")
-  date         DateTime? @db.Date
+  id           Int      @id @default(autoincrement())
+  date         DateTime @db.Date
   veterinarian Int
   petowner     Int
 }

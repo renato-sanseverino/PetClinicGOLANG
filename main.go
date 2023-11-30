@@ -22,11 +22,12 @@ func GetPrisma(c *gin.Context) *db.PrismaClient {
 var pets []db.InnerPet
 
 type Pet struct {
-	Id    int    `json:"id"`
-	Name  string `json:"name"`
-	Breed string `json:"breed"`
-	Age   int    `json:"age"`
-	Owner *Owner `json:"owner"`
+	Id          int     `json:"id"`
+	Name        string  `json:"name"`
+	Breed       string  `json:"breed"`
+	Age         int     `json:"age"`
+	Owner       *Owner  `json:"owner"`
+	FlagRemoved bool    `json:"flag_removed"`
 }
 
 type Owner struct {
@@ -59,7 +60,7 @@ func postPet(c *gin.Context) {
 	insertedPet, err := client.Pet.CreateOne(
 		db.Pet.Name.Set(payload.Name),
 		db.Pet.Breed.Set(payload.Breed),
-		db.Pet.Age.Set(payload.Age),
+		db.Pet.FlagRemoved.Set(payload.FlagRemoved),
 	).Exec(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

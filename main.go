@@ -55,12 +55,10 @@ func postPet(c *gin.Context) {
 		return
 	}
 
-	// Assuming successful creation, return a success response
 	c.JSON(http.StatusCreated, gin.H{"message": "Pet created successfully", "pet": insertedPet})
 }
 
 func patchPet(c *gin.Context) {
-	// Get the ID from the URL parameters
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -68,29 +66,34 @@ func patchPet(c *gin.Context) {
 		return
 	}
 
-	// Bind JSON body to the Pet struct for updates
+	// Bind JSON body to the Pet struct
 	var payload db.InnerPet
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	/*
-		client := GetPrisma(c)
-		updatedPet, err := client.Pet.UpsertOne(
-			payload,
-		).Exec(c)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-	*/
+	client := GetPrisma(c)
+	updatedPet, err := client.Pet.FindUnique(
+		db.Pet.ID.Equals(id),
+	).Update(
+		db.Pet.Name.Set(payload.Name),
+		db.Pet.Breed.Set(payload.Breed),
+		db.Pet.FlagRemoved.Set(payload.FlagRemoved),
+		db.Pet.Age.SetOptional(payload.Age),
+		db.Pet.Owner.SetOptional(payload.Owner),
+	).Exec(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Pet " + strconv.Itoa(id) + " updated successfully"})
+	c.JSON(http.StatusCreated, gin.H{"message": "Pet patched", "pet": updatedPet})
 }
 
 func deletePet(c *gin.Context) {
-	// Get the ID from the URL parameters
+	// TODO: utilizar o flag_removed ao invés de apagar o registro na tabela
+
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -98,12 +101,16 @@ func deletePet(c *gin.Context) {
 		return
 	}
 
-	/*
-		client := GetPrisma(c)
-		client.Pet.Delete(id).Exec(c)
-	*/
+	client := GetPrisma(c)
+	deletedPet, err := client.Pet.FindUnique(
+		db.Pet.ID.Equals(id),
+	).Delete().Exec(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Pet " + strconv.Itoa(id) + " deleted successfully"})
+	c.JSON(http.StatusCreated, gin.H{"message": "Pet deleted successfully", "pet id": deletedPet.ID})
 }
 
 func main() {

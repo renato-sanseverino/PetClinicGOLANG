@@ -19,23 +19,9 @@ func GetPrisma(c *gin.Context) *db.PrismaClient {
 	return client
 }
 
-var pets []db.InnerPet
-
-type Pet struct {
-	Id          int     `json:"id"`
-	Name        string  `json:"name"`
-	Breed       string  `json:"breed"`
-	Age         int     `json:"age"`
-	Owner       *Owner  `json:"owner"`
-	FlagRemoved bool    `json:"flag_removed"`
-}
-
-type Owner struct {
-	name  string
-	email string
-}
-
 func getPets(c *gin.Context) {
+	// var pets []db.InnerPet
+
 	client := GetPrisma(c)
 
 	pets, err := client.Pet.FindMany().Exec(c)
@@ -48,7 +34,7 @@ func getPets(c *gin.Context) {
 }
 
 func postPet(c *gin.Context) {
-	var payload Pet
+	var payload db.InnerPet
 
 	// Bind JSON body to the Pet struct
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -61,6 +47,8 @@ func postPet(c *gin.Context) {
 		db.Pet.Name.Set(payload.Name),
 		db.Pet.Breed.Set(payload.Breed),
 		db.Pet.FlagRemoved.Set(payload.FlagRemoved),
+		db.Pet.Age.SetOptional(payload.Age),
+		db.Pet.Owner.SetOptional(payload.Owner),
 	).Exec(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -81,7 +69,7 @@ func patchPet(c *gin.Context) {
 	}
 
 	// Bind JSON body to the Pet struct for updates
-	var payload Pet
+	var payload db.InnerPet
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

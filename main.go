@@ -5,6 +5,7 @@ import (
 	"petClinicAPI/prisma/db"
 	"strconv"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	// "github.com/joho/godotenv"
 )
@@ -55,7 +56,7 @@ func postPet(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Pet created successfully", "pet": insertedPet})
+	c.JSON(http.StatusOK, gin.H{"message": "Pet created successfully", "pet": insertedPet})
 }
 
 func patchPet(c *gin.Context) {
@@ -88,7 +89,7 @@ func patchPet(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Pet patched", "pet": updatedPet})
+	c.JSON(http.StatusOK, gin.H{"message": "Pet patched", "pet": updatedPet})
 }
 
 func deletePet(c *gin.Context) {
@@ -110,24 +111,25 @@ func deletePet(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Pet deleted successfully", "pet id": deletedPet.ID})
+	c.JSON(http.StatusOK, gin.H{"message": "Pet deleted successfully", "pet id": deletedPet.ID})
 }
 
 func main() {
 	// godotenv.Load(".env")
 
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
+	router := gin.Default()
+	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Gin gonic API",
 		})
 	})
 
-	rGroup := r.Group("/api")
+	rGroup := router.Group("/api")
 	rGroup.GET("/pets", getPets)
 	rGroup.POST("/pets", postPet)
 	rGroup.PATCH("/pets/:id", patchPet)
 	rGroup.DELETE("/pets/:id", deletePet)
 
-	r.Run(":3000") // listen and serve on 0.0.0.0:3000
+	router.Use(cors.Default())
+	router.Run(":3000") // listen and serve on 0.0.0.0:3000
 }

@@ -27,7 +27,7 @@ func getPets(c *gin.Context) {
 
 	pets, err := client.Pet.FindMany().Exec(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -52,7 +52,7 @@ func postPet(c *gin.Context) {
 		db.Pet.Owner.SetOptional(payload.Owner),
 	).Exec(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -85,7 +85,7 @@ func patchPet(c *gin.Context) {
 		db.Pet.Owner.SetOptional(payload.Owner),
 	).Exec(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -107,7 +107,7 @@ func deletePet(c *gin.Context) {
 		db.Pet.ID.Equals(id),
 	).Delete().Exec(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 

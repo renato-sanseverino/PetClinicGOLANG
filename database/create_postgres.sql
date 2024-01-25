@@ -2,7 +2,7 @@ CREATE DATABASE golang_clinic;
 \c golang_clinic
 
 
-CREATE TABLE public.pet (
+CREATE TABLE IF NOT EXISTS public.pet (
     id SERIAL,
     name character varying(120) NOT NULL,
     breed character varying(45) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE public.pet (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE public.petowner (
+CREATE TABLE IF NOT EXISTS public.petowner (
     id SERIAL,
     name character varying(120) NOT NULL,
     birth_date date,
@@ -26,7 +26,7 @@ ALTER TABLE pet
     add constraint fk_pet_owner
         foreign key (owner) references petowner (id);
 
-CREATE TABLE public.treatment (
+CREATE TABLE IF NOT EXISTS public.treatment (
     id SERIAL,
     description character varying(120) NOT NULL,
     pet integer NOT NULL,
@@ -38,7 +38,7 @@ ALTER TABLE treatment
     add constraint fk_pet_treatment
         foreign key (pet) references pet (id);
 
-CREATE TABLE public.vaccination (
+CREATE TABLE IF NOT EXISTS public.vaccination (
     id SERIAL,
     description character varying(120) NOT NULL,
     pet integer NOT NULL,
@@ -49,14 +49,14 @@ ALTER TABLE vaccination
     add constraint fk_pet_vaccination
         foreign key (pet) references pet (id);
 
-CREATE TABLE public.veterinarian (
+CREATE TABLE IF NOT EXISTS public.veterinarian (
     id SERIAL,
     name character varying(120) NOT NULL,
     "inscricaoCRMV" character varying(75) NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE public.appointment (
+CREATE TABLE IF NOT EXISTS public.appointment (
     id SERIAL,
     date date NOT NULL,
     veterinarian integer NOT NULL,
@@ -75,7 +75,6 @@ INSERT INTO pet ("name", "breed", "age", "owner", "flag_removed") VALUES
 --
 -- Data for table veterinarian
 --
-
 INSERT INTO veterinarian ("name", "inscricaoCRMV") VALUES
 ('CINTIA', 'SP 5091234567890'),
 ('GASPAR', 'SP 5141234567890'),

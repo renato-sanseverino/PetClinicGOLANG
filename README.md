@@ -20,3 +20,7 @@ Pet Clinic API written in GOLANG
     > go run github.com/steebchen/prisma-client-go db push
 - docker compose up
 - Follow the link http://localhost:3000/api/pets
+
+## Deploy the project to a Kubernetes cluster
+- Run
+    > kubectl apply -f deploy/petclinic.yaml

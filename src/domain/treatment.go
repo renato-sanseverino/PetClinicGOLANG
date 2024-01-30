@@ -9,11 +9,11 @@ import (
 type Treatment struct {
 	ID           uuid.UUID     // Anotations para o GIN FRAMEWORK
 	Description  string        `json:"description" binding:"required"`
-	Pet          *int          `json:"pet" binding:"required"`
+	Pet          *Pet          `json:"pet" binding:"required"`
 	Veterinarian *Veterinarian `json:"veterinarian" binding:"required"`
 }
 
-func NewTreatment(description string, pet *int, veterinarian *Veterinarian) (*Treatment, error) {
+func NewTreatment(description string, pet *Pet, veterinarian *Veterinarian) (*Treatment, error) {
 	obj := &Treatment{
 		ID:           uuid.New(),
 		Description:  description,

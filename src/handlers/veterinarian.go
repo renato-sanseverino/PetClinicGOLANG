@@ -12,9 +12,9 @@ import (
 // TODO: implementar o use case de preescrição
 func ReceitarTratamento(c *gin.Context) {
 
-	pet := 1 // NewPet()
+	pet, _ := domain.NewPet("Ollie", "Doberman", 3)
 	veterinarian, _ := domain.NewVeterinarian("Doctor Who", "SP 9876543210")
-	treatment, _ := domain.NewTreatment("antibiótico", &pet, veterinarian)
+	treatment, _ := domain.NewTreatment("antibiótico", pet, veterinarian)
 
 	c.JSON(http.StatusOK, gin.H{"message": "", "Treatment": treatment})
 }
@@ -31,8 +31,8 @@ func PostVeterinarian(c *gin.Context) {
 		return
 	}
 
-	vet, err := pool.Exec(c, "INSERT INTO veterinarian (id, name, \"inscricaoCRMV\") VALUES ($1, $2, $3)",
-		payload.ID,
+	vet, err := pool.Exec(c, "INSERT INTO veterinarian (name, \"inscricaoCRMV\") VALUES ($1, $2)",
+		// payload.ID,
 		payload.Name,
 		payload.InscricaoCRMV,
 	)

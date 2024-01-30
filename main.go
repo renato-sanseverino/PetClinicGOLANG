@@ -28,6 +28,7 @@ func main() {
 	rGroup.PATCH("/pets/:id", handlers.PatchPet)
 	rGroup.DELETE("/pets/:id", handlers.DeletePet)
 	rGroup.POST("/veterinarians", handlers.PostVeterinarian)
+	rGroup.POST("/receitar_tratamento", handlers.ReceitarTratamento)
 
 	router.Use(cors.Default())
 	router.Run(":3000") // listen and serve on 0.0.0.0:3000

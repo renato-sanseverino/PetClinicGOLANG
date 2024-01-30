@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 	"petclinic/prisma/db"
-	"petclinic/src/domain"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // TODO:  verficar se o prisma trabalha com Pool de Conexões
@@ -27,19 +27,16 @@ type Pool struct {
 }
 
 // mock para testes
-func (p *Pool) Exec(ctx context.Context, sql string, arguments ...any) (*domain.Veterinarian, error) {
-	return domain.NewVeterinarian("", "SP 9876543210")
+type ResultSet struct {
+	rows int32
 }
 
 // mock para testes
-func GetPool(databaseURL string) *Pool {
-	return &Pool{
-		minConns: 25,
-		maxConns: 25,
-	}
+func (p *Pool) Exec(ctx context.Context, sql string, arguments ...any) (*ResultSet, error) {
+	rows := 0
+	return &ResultSet{rows: int32(rows)}, nil
 }
 
-/*
 func GetPool(databaseURL string) *pgxpool.Pool {
 	config, err := pgxpool.ParseConfig(databaseURL)
 	if err != nil {
@@ -53,6 +50,7 @@ func GetPool(databaseURL string) *pgxpool.Pool {
 	return pool
 }
 
+/*
 func AppMiddleware(pool *pgxpool.Pool) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set("pool", pool)

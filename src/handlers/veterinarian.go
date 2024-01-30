@@ -9,6 +9,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// TODO: implementar o use case de preescrição
+func ReceitarTratamento(c *gin.Context) {
+
+	pet := 1 // NewPet()
+	veterinarian, _ := domain.NewVeterinarian("Doctor Who", "SP 9876543210")
+	treatment, _ := domain.NewTreatment("antibiótico", &pet, veterinarian)
+
+	c.JSON(http.StatusOK, gin.H{"message": "", "Treatment": treatment})
+}
+
 func PostVeterinarian(c *gin.Context) {
 	var databaseURL = os.Getenv("DATABASE_URL") // passar através do MIDDLEWARE   utils.appMiddleware()
 	var pool = utils.GetPool(databaseURL)       // passar através do MIDDLEWARE   utils.appMiddleware()

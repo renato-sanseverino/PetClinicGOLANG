@@ -19,16 +19,15 @@ func NewVeterinarian(Name string, InscricaoCRMV string) (*Veterinarian, error) {
 		InscricaoCRMV: InscricaoCRMV,
 	}
 
-	err := obj.Validate()
-	if err != nil {
-		return nil, err
+	if !obj.Validate() {
+		return nil, errors.New("invalid data")
 	}
 	return obj, nil
 }
 
-func (obj *Veterinarian) Validate() error {
+func (obj *Veterinarian) Validate() bool {
 	if obj.Name == "" || obj.InscricaoCRMV == "" {
-		return errors.New("invalid data")
+		return false
 	}
-	return nil
+	return true
 }

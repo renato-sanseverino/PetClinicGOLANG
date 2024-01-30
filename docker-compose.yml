@@ -19,8 +19,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
-# retirar o comentário para acessar o POSTGRES usando o Dbeaver
-# se conflitar com outro POSTGRES na mesma porta > sudo service postgresql stop
+# retirar o comentário para acessar o POSTGRES usando o Dbeaver,  se conflitar com
+# outro POSTGRES na mesma porta   > sudo service postgresql stop   > net stop postgresql-x64-16
 #    ports:
 #      - '5432:5432'
     volumes:

@@ -1,10 +1,12 @@
-package handlers;
+package handlers
 
 import (
 	"net/http"
-	"strconv"
 	"petclinic/prisma/db"
+	"petclinic/src/domain"
 	"petclinic/src/utils"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -100,4 +102,20 @@ func DeletePet(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Pet deleted successfully", "pet id": deletedPet.ID})
+}
+
+// Usar apenas para pequenas coleções, por questoes de performance e escalabilidade
+// TODO: trazer do banco de dados os registros filtrados e paginados
+func FindByBreed(c *gin.Context) {
+	breed := c.Param("breed")
+	client := utils.GetPrisma(c)
+
+	pets, err := client.Pet.FindMany().Exec(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	f := domain.FilterByBreed(pets, breed)
+	c.JSON(http.StatusOK, gin.H{"data": f})
 }

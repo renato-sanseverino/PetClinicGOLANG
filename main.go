@@ -24,6 +24,7 @@ func main() {
 	// TODO: verificar integração entre o GIN e o Prometheus
 	// rGroup.GET("/metrics", promhttp.Handler())
 	rGroup.GET("/pets", handlers.GetPets)
+	rGroup.GET("/pets/findByBreed/:breed", handlers.FindByBreed)
 	rGroup.POST("/pets", handlers.PostPet)
 	rGroup.PATCH("/pets/:id", handlers.PatchPet)
 	rGroup.DELETE("/pets/:id", handlers.DeletePet)

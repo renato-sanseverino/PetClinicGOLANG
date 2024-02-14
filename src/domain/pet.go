@@ -1,6 +1,10 @@
 package domain
 
 import (
+	"petclinic/prisma/db"
+	"petclinic/src/utils"
+	"strings"
+
 	"github.com/google/uuid"
 )
 
@@ -19,4 +23,13 @@ func NewPet(name string, breed string, age int) (*Pet, error) {
 		Breed: breed,
 		Age:   age,
 	}, nil
+}
+
+// Usar apenas para pequenas coleções, por questoes de performance e escalabilidade
+// TODO: trazer do banco de dados os registros filtrados e paginados
+func FilterByBreed(pets []db.PetModel, breed string) []db.PetModel {
+	f := utils.Filter(pets, func(p db.PetModel) bool {
+		return strings.Contains(strings.ToLower(p.Breed), strings.ToLower(breed))
+	})
+	return f
 }
